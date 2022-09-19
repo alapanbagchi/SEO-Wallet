@@ -1,0 +1,52 @@
+{
+    "name": "SEO Wallet",
+    "manifest_version": 3,
+    "version": "0.1",
+    "description": "SEO Wallet",
+    "permissions": [
+        "activeTab",
+        "scripting"
+    ],
+    "action": {
+        "persistent": true 
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "index.html",
+                "js/index.js",
+                "index.css"
+            ],
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ]
+        }
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ],
+            "js": [
+                "js/background.js",
+                "js/index.js"
+            ],
+            "css": [
+                "index.css"
+            ],
+            "png":[
+                "svg/*"
+            ],
+            "run_at": "document_end",
+            "all_frames": true
+        }
+    ],
+    "background": {
+        "service_worker": "js/background.js"
+    },
+    "chrome_url_overrides":{
+        "newtab":"index.html"
+    }
+}
