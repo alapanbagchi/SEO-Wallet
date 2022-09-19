@@ -36,44 +36,41 @@ html[data-theme="dark"] {
     width: 0;
 }
 
-/* Container for everything */
 .seo_wallet_extension_container {
     position: absolute;
     right: 0;
-    width: 500px;
+    width: 411px;
     background-color: var(--background);
     height: 100vh;
     z-index: 9999999999999999999999;
     overflow: hidden;
     transition: 0.3s all ease-in-out;
-    -webkit-transition: 0.3s all;
-    -moz-transition: 0.3s all;
-    -ms-transition: 0.3s all;
-    -o-transition: 0.3s all;
+    -webkit-transition: 0.3s all ease-in-out;
+    -moz-transition: 0.3s all ease-in-out;
+    -ms-transition: 0.3s all ease-in-out;
+    -o-transition: 0.3s all ease-in-out;
+    animation: collapseRev 0.3s linear forwards;
+    -webkit-animation: collapseRev 0.3s linear forwards;
 }
 
-/* Header */
 header {
     background-color: var(--dark-blue);
     height: 64px;
-    padding: 17.5px 124px 17.5px 24px;
+    padding: 17.5px 24px 17.5px 24px;
     color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-/* Logo for when the header is collapsed */
 header .logo .small {
     display: none;
 }
 
-/* Hide the big logo when the header collapses */
 .collapse .logobig {
     display: none;
 }
 
-/* Show the small logo when the header collapses */
 .collapse .logo .small {
     display: block;
     opacity: 1;
@@ -83,14 +80,10 @@ header .logo .small {
     display: none;
 }
 
-.dark_mode_icon{
+.dark_mode_icon {
     opacity: 0.6;
 }
 
-.collapse header {
-    justify-content: center;
-    padding: 17.5px 24px 17.5px 24px;
-}
 
 header .icons {
     display: flex;
@@ -189,7 +182,7 @@ main {
 }
 
 .menu {
-    width: calc(100% - 88px);
+    width: 100%;
     border-right: 1px solid var(--border);
     overflow: auto;
     position: relative;
@@ -205,19 +198,111 @@ main {
     -o-transition: all 0.3s ease-in-out;
 }
 
+/* .collapse main .menu {
+    width: 0;
+} */
+
 .collapse {
-    width: 88px;
-    transition: all 0.3s ease-in-out;
-    -webkit-transition: all 0.3s ease-in-out;
-    -moz-transition: all 0.3s ease-in-out;
-    -ms-transition: all 0.3s ease-in-out;
-    -o-transition: all 0.3s ease-in-out;
+    animation: collapse 0.3s linear forwards, sidemenucontainerdisplay 0.3s linear 0.3s forwards;
+    -webkit-animation: collapse 0.3s linear forwards, sidemenucontainerdisplay 0.3s linear 0.3s forwards;
 }
 
+.collapse .menu {
+    animation: mainmenuwidth 0s linear 0.3s forwards;
+    -webkit-animation: mainmenuwidth 0s linear 0.3s forwards;
+}
+
+.collapse .sidemenu {
+    animation: sidemenudisplay 0s linear 0.3s forwards;
+    -webkit-animation: sidemenudisplay 0s linear 0.3s forwards;
+}
+
+.collapse header {
+    justify-content: center;
+    padding: 17.5px 24px 17.5px 24px;
+    animation: headerCollapse 0.3s linear forwards;
+    -webkit-animation: headerCollapse 0.3s linear forwards;
+}
+
+@keyframes collapse {
+    0% {
+        right: 0;
+    }
+
+    100% {
+        right: -411px;
+    }
+}
+
+@keyframes collapseRev {
+    0% {
+        right: -411px;
+    }
+
+    100% {
+        right: 0;
+    }
+}
+
+@keyframes mainmenuwidth {
+    0% {
+        width: 411px;
+    }
+
+    100% {
+        width: 0;
+    }
+}
+
+@keyframes sidemenucontainerdisplay {
+    0% {
+        right: -411px;
+    }
+
+    100% {
+        right: -323px;
+    }
+}
+
+@keyframes sidemenucontainerdisplayRev {
+    0% {
+        right: -323px;
+    }
+
+    100% {
+        right: -411px;
+    }
+}
+
+@keyframes sidemenudisplay {
+    0% {
+        right: 0px;
+    }
+
+    100% {
+        right: 322px;
+    }
+}
+
+@keyframes headerCollapse {
+    0%{
+        width: 411px;
+    }
+    100%{
+        width: 88px;
+    }
+}
 
 .sidemenu {
     width: 88px;
     height: calc(100vh - 64px);
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+    right: -88px;
+    display: flex;
+    position: absolute;
 }
 
 /** Extension Tabs **/
@@ -326,7 +411,7 @@ main {
     -o-transition: all 0.5s ease;
 }
 
-.contentcontainer{
+.contentcontainer {
     display: flex;
     height: calc(100vh - 200px);
     left: 0;
@@ -387,25 +472,20 @@ main {
     -o-transition: all 0.3s ease;
 }
 
-.sidemenu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 20px 0;
-}
 
 .sidemenu .avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: auto;
+    margin-left: auto;
     cursor: pointer;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
     position: relative;
+
 }
 
 .sidemenu .avatar .img {
@@ -413,7 +493,7 @@ main {
     height: 100%;
 }
 
-.avatar .inactive{
+.avatar .inactive {
     filter: grayscale(1);
     -webkit-filter: grayscale(1);
 }
@@ -482,7 +562,8 @@ main {
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
 }
-.visitsite{
+
+.visitsite {
     width: 100%;
     height: fit-content;
     margin-top: auto;
@@ -493,7 +574,7 @@ main {
     cursor: pointer;
 }
 
-.silentmode{
+.silentmode {
     width: 411px;
     height: fit-content;
     padding: 26.5px 24px;
@@ -507,7 +588,7 @@ main {
     flex-direction: column;
 }
 
-.silentmode .description{
+.silentmode .description {
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
