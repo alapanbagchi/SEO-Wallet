@@ -24,11 +24,16 @@ html[data-theme="dark"] {
     --avatar-after: #070F21;
 }
 
+@font-face {
+    font-family: 'Averta';
+    src: url('./font/AvertaCY-Regular.ttf');
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Inter";
+    font-family: "Averta";
     color: var(--text);
 }
 
@@ -168,6 +173,8 @@ header .icons .switch .slider {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    opacity: 0.6;
 }
 
 .partition {
@@ -205,6 +212,8 @@ main {
 .collapse {
     animation: collapse 0.3s linear forwards, sidemenucontainerdisplay 0.3s linear 0.3s forwards;
     -webkit-animation: collapse 0.3s linear forwards, sidemenucontainerdisplay 0.3s linear 0.3s forwards;
+    ;
+
 }
 
 .collapse .menu {
@@ -218,10 +227,15 @@ main {
 }
 
 .collapse header {
+    display: none;
     justify-content: center;
     padding: 17.5px 24px 17.5px 24px;
     animation: headerCollapse 0.3s linear forwards;
     -webkit-animation: headerCollapse 0.3s linear forwards;
+}
+
+.collapse .box{
+    animation: boxShow 0.3s linear forwards;
 }
 
 @keyframes collapse {
@@ -285,25 +299,99 @@ main {
 }
 
 @keyframes headerCollapse {
-    0%{
+    0% {
         width: 411px;
     }
-    100%{
+
+    100% {
         width: 88px;
     }
 }
 
+.hidemenu.seo_wallet_extension_container {
+    animation: hideCollapsedMenu 0.3s linear forwards;
+}
+
+.showmenu.seo_wallet_extension_container {
+    animation: hideCollapsedMenuRev 0.3s linear forwards;
+}
+
+
+.hidemenu .sidemenu .mainmenucontrols .box {
+    display: flex;
+    position: fixed;
+    right: -17px;
+    bottom: 3px;
+    animation: boxHide 0.3s linear forwards;
+}
+.seo_wallet_extension_container.hidemenu .sidemenu .mainmenucontrols .box svg {
+    margin-left: -5px;
+}
+.seo_wallet_extension_container.showmenu .sidemenu .mainmenucontrols .box{
+    animation: boxShow 0.3s linear forwards;
+}
+
+
+
+@keyframes boxHide {
+    0%{
+        right: 0;
+    }
+    100%{
+        right: -15px;
+    }
+}
+
+@keyframes boxShow {
+    0%{
+        right: -15px;
+    }
+    100%{
+        right: 0;
+    }
+}
+
+@keyframes hideCollapsedMenu {
+    0% {
+        right: -323px;
+    }
+
+    100% {
+        right: -411px;
+    }
+}
+
+@keyframes hideCollapsedMenuRev {
+    0% {
+        right: -411px;
+    }
+
+    100% {
+        right: -323px;
+    }
+}
+
+.controls{
+    margin-top: 20px;
+}
 .sidemenu {
     width: 88px;
-    height: calc(100vh - 64px);
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    height: 100vh;
     padding: 20px 0;
     right: -88px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     position: absolute;
 }
+
+.favorites{
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
 
 /** Extension Tabs **/
 .extension_wrapper {
@@ -433,6 +521,7 @@ main {
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
+    opacity: 0.8;
 }
 
 .create_ticket {
@@ -493,12 +582,7 @@ main {
     height: 100%;
 }
 
-.avatar .inactive {
-    filter: grayscale(1);
-    -webkit-filter: grayscale(1);
-}
-
-/* .sidemenu .avatar::after {
+.sidemenu .favorites .avatar::after {
     content: "";
     position: absolute;
     width: 10px;
@@ -507,8 +591,7 @@ main {
     top: 0;
     right: 0;
     border: 2px solid var(--avatar-after);
-
-} */
+}
 
 .sidemenu .avatar.online::after {
     background-color: #5FC454;
@@ -517,6 +600,8 @@ main {
 .sidemenu .avatar.offline::after {
     background-color: #F45757;
 }
+
+
 
 .controls .partition {
     width: 100%;

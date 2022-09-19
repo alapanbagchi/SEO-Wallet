@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEO Wallet</title>
     <link rel="stylesheet" href="index.css">
-    <script async defer nonce src="js/index.js"></script>
+    <script async defer nonce src="./background.js"></script>
 </head>
 
 <body>
@@ -181,24 +181,18 @@
 
             </div>
 
-            <div class="sidemenu">
-                <div class="avatar online">
-                    <img  class="inactive" src="svg/ext_logo1.svg" alt="">
-                </div>
-                <div class="avatar online">
-                    <img src="svg/ext_logo1.svg" alt="">
-                </div>
-                <div class="avatar offline">
-                    <img src="svg/ext_logo1.svg" alt="">
+            <div id="submenu" class="sidemenu">
+                <div class="favorites">
+
                 </div>
                 <div class="controls">
                     <div class="partition"></div>
-                    <div class="add">
+                    <div id="expandMenu" class="add">
                         <img src="svg/add.svg" alt="">
                     </div>
                 </div>
                 <div class="mainmenucontrols">
-                    <div id="expandMenu" class="box left">
+                    <div id="toggleCollapsedMenuDisplay" class="box left">
                         <svg width="7" height="12" viewBox="0 0 7 12" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4499 11.125C6.5999 10.975 6.6749 10.8 6.6749 10.6C6.6749 10.4 6.5999 10.225 6.4499 10.075L2.3749 6.00002L6.4499 1.92502C6.5999 1.77502 6.6749 1.60002 6.6749 1.40002C6.6749 1.20002 6.5999 1.02502 6.4499 0.875024C6.2999 0.725024 6.1249 0.650024 5.9249 0.650024C5.7249 0.650024 5.5499 0.725024 5.3999 0.875024L0.899902 5.37502C0.816569 5.45836 0.753903 5.55402 0.711903 5.66202C0.670569 5.77069 0.649902 5.88336 0.649902 6.00002C0.649902 6.11669 0.670569 6.22902 0.711903 6.33702C0.753903 6.44569 0.816569 6.54169 0.899902 6.62502L5.3999 11.125C5.5499 11.275 5.7249 11.35 5.9249 11.35C6.1249 11.35 6.2999 11.275 6.4499 11.125Z"

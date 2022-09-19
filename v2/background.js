@@ -1,4 +1,5 @@
-let items = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [
+//Array consisting of all the extensions
+let items = [
     {
         name: 'Alt Text Tester',
         description: 'Integer sed molis maecenas',
@@ -44,27 +45,26 @@ let items = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('ite
 ]
 
 
+let DARK_MODE = false
+let NORMAL_MODE = false
 
-const favorites = []
-
-//Function for expanding the footer by adding a class called expand on click and removing it on click
+//Function to expand the footer on click
 const expandFooter = () => {
+    const FOOTER_EXPANDED_HEIGHT = '350px'
+    const FOOTER_CONTRACTED_HEIGHT = '200px'
+
     const footer = document.querySelector('.menufooter');
     const content = document.querySelector('.contentcontainer');
     if (footer.classList.contains('expand')) {
         footer.classList.remove('expand');
-        content.style.height = 'calc(100vh - 200px)';
+        content.style.height = `calc(100vh - ${FOOTER_CONTRACTED_HEIGHT})`;
         content.style.transition = 'height 0.5s ease';
     } else {
         footer.classList.add('expand');
-        content.style.height = 'calc(100vh - 350px)';
+        content.style.height = `calc(100vh - ${FOOTER_EXPANDED_HEIGHT})`;
         content.style.transition = 'height 0.5s ease';
     }
 }
-
-
-let DARK_MODE = false
-let NORMAL_MODE = false
 
 //Function for setting favorite
 const setFavorite = (id) => {
@@ -84,20 +84,24 @@ const setFavorite = (id) => {
     }
 }
 
+//Function to collapse the expanded menu
 const collapseMenu = () => {
     const body = document.querySelector('.seo_wallet_extension_container');
     body.classList.add('collapse');
+    //A timeout is added to prevent triggering the animation while the menu is being collapsed
     setTimeout(() => {
         body.classList.add('showmenu');
     }, 300)
 }
 
+//Function to expand the menu
 const expandMenu = () => {
     const body = document.querySelector('.seo_wallet_extension_container');
     body.classList.remove('collapse');
     body.classList.remove('showmenu');
 }
 
+//Function to hide or show the collapsed menu
 const toggleCollapsedMenuDisplay = () => {
     const body = document.querySelector('.seo_wallet_extension_container');
     if (body.classList.contains('showmenu')) {
@@ -208,7 +212,6 @@ const enableExtension = (id) => {
     }
 }
 
-
 const init = () => {
     document.getElementById('expandFooter').addEventListener('click', expandFooter);
     document.getElementById('toggleDarkTheme').addEventListener('click', toggleDarkTheme);
@@ -240,5 +243,30 @@ if (document.readyState !== 'loading') {
         init()
     });
 }
+
+
+function main() {
+    const body = document.querySelector('body')
+    let iFrame = document.createElement('iframe')
+    iFrame.src = chrome.runtime.getURL('/index.html')
+    iFrame.style.zIndex = '99999999999999999999999',
+        iFrame.style.position = 'fixed',
+        iFrame.style.top = '0',
+        iFrame.style.right = '0',
+        iFrame.style.width = '411px',
+        iFrame.style.height = '100vh',
+        iFrame.style.border = 'none',
+        document.body.append(iFrame, document.body.firstChild)
+
+}
+
+chrome.action.onClicked.main((tab) => {
+    if (!tab.url.includes("chrome://")) {
+        chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            function: reddenPage
+        });
+    }
+});
 
 

@@ -30,7 +30,6 @@
                 "http://*/*"
             ],
             "js": [
-                "js/background.js",
                 "js/index.js"
             ],
             "css": [
@@ -44,7 +43,7 @@
         }
     ],
     "background": {
-        "service_worker": "js/background.js"
+        "service_worker": "background.js"
     },
     "chrome_url_overrides":{
         "newtab":"index.html"
