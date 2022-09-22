@@ -5,23 +5,8 @@
     "description": "SEO Wallet",
     "permissions": [
         "activeTab",
+        "tabs",
         "scripting"
-    ],
-    "action": {
-        "persistent": true 
-    },
-    "web_accessible_resources": [
-        {
-            "resources": [
-                "index.html",
-                "js/index.js",
-                "index.css"
-            ],
-            "matches": [
-                "https://*/*",
-                "http://*/*"
-            ]
-        }
     ],
     "content_scripts": [
         {
@@ -30,23 +15,39 @@
                 "http://*/*"
             ],
             "js": [
-                "js/background.js",
-                "js/index.js"
+                "contentScripts.js"
             ],
-            "css": [
-                "index.css"
-            ],
-            "png":[
-                "svg/*"
-            ],
-            "run_at": "document_end",
-            "all_frames": true
+            "run_at": "document_end"
         }
     ],
-    "background": {
-        "service_worker": "js/background.js"
+    "action": {
+        "persistent": true
     },
-    "chrome_url_overrides":{
-        "newtab":"index.html"
+    "icons": {
+        "16": "logo/logo_16x16.png",
+        "48": "logo/logo_48x48.png",
+        "128": "logo/logo_128x128.png"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "index.html",
+                "js/index.js",
+                "index.css",
+                "svg/*",
+                "font/*",
+                "logo/*"
+            ],
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ]
+        }
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
     }
 }
