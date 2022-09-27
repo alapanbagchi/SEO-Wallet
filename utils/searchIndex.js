@@ -1,0 +1,3 @@
+const searchIndex = () => {
+    document.getElementsByClassName('')
+}

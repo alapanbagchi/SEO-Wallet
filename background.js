@@ -1,146 +1,113 @@
 try {
-    chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
-        console.log("Background", response, response === 'COLLAPSE_MENU')
-        if (response.message === 'COLLAPSE_MENU') {
+    try {
+        importScripts("utils/wordcounter.js", "utils/altImage.js", "utils/searchIntentFinder.js", "utils/searchIndex.js");
+    } catch (e) {
+        console.log(e);
+    }
+    chrome.runtime.onMessage.addListener(async function (response, sender, sendResponse) {
+        /**
+         * WORD COUNT FUNCTIONALITY
+         */
+        //Executes the word count file when the message is received
+        if (response.message === 'wordCount') {
+            chrome.scripting.executeScript({
+                target: { tabId: sender.tab.id },
+                function: wordCount
+            }
+            )
+        }
+        //Creates a context menu when the word count is done
+        if (response.message === 'WordCountData') {
+            chrome.contextMenus.remove('wordCount', () => {
+                chrome.runtime.lastError
+            })
+
+            chrome.contextMenus.create({
+                id: 'wordCount',
+                title: `Words: ${response.data[0]} |  Characters: ${response.data[1]}`,
+                contexts: ['selection']
+            })
+            if (chrome.runtime.lastError) {
+                console.log(chrome.runtime.lastError.message);
+            } else {
+            }
+        }
+        /**
+         * END OF WORD COUNT FUNCTIONALITY
+        */
+
+        /** 
+         * ALT IMAGE FUNCTIONALITY
+        */
+        if (response.message === 'altImage') {
+            chrome.scripting.executeScript({
+                target: { tabId: sender.tab.id },
+                function: altImage
+            })
+        }
+        /**
+         * END OF ALT IMAGE FUNCTIONALITY
+         */
+        if (response.message === 'searchIntentFinder') {
             chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 chrome.scripting.executeScript({
-                    function() {
-                        document.querySelector('body').style.marginRight = '0'
-                        document.querySelector('body').style.transition = 'all 0.3s linear '
-                        setTimeout(() => {
-                            document.querySelector('body').style.marginRight = '88px'
-                            document.querySelector('body').style.transition = 'all 0.3s linear '
-                        }, 300)
-                        const iframe = document.querySelector('.seo_wallet_extension_iframe')
-                        iframe.style.width = '0'
-                        iframe.style.transition = 'all 0.3s linear'
-                        setTimeout(() => {
-                            iframe.style.width = '88px'
-                            iframe.style.transition = 'all 0.3s linear'
-                        }, 300)
-                    },
-                    target: { tabId: tabs[0].id }
+                    target: { tabId: sender.tab.id },
+                    function: () => {
+                        let links = document.querySelectorAll('div .g > div:not(.d4rhi) .yuRUbf a:not(.fl.iUh30)')
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    chrome.runtime.sendMessage({
+                                        message: 'searchIntentHTMLFinder',
+                                        data: entry.target.href
+                                    })
+                                    observer.unobserve(entry.target)
+                                }
+                            })
+                        })
+                        links.forEach(link => {
+                            observer.observe(link)
+                        })
+                    }
                 })
             })
         }
-        else if (response.message === 'EXPAND_MENU') {
-            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                chrome.scripting.executeScript({
-                    function() {
-                        document.querySelector('body').style.marginRight = '411px'
-                        document.querySelector('body').style.transition = 'all 0.3s linear'
-                        const iframe = document.querySelector('.seo_wallet_extension_iframe')
-                        iframe.style.width = '411px'
+        if (response.message === 'searchIntentHTMLFinder') {
+            chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+                let title, description, h1, h2, h3, h4, h5, h6
+                let link = response.data
+                const fetchedLink = await fetch(link)
+                const data = await fetchedLink.text()
+                chrome.tabs.sendMessage( 
+                    tabs[0].id,
+                    {
+                        message: 'searchIntentDOMManipulation',
+                        data: {
+                            data, link
+                        }
                     },
-                    target: { tabId: tabs[0].id }
-                })
+                 )
             })
         }
-        else if (response.message === 'CLOSE_MENU') {
-            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                chrome.scripting.executeScript({
-                    function() {
-                        document.querySelector('body').style.marginRight = '0'
-                        document.querySelector('body').style.transition = 'all 0.3s linear'
-                        const iframe = document.querySelector('.seo_wallet_extension_iframe')
-                        iframe.style.width = '0'
-                    },
-                    target: { tabId: tabs[0].id }
-                })
-            })
+        if (response.message === 'searchDOMModify') {
+            console.log("HERE")
         }
-        else if (response.message === 'OPEN_MENU') {
-            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                chrome.scripting.executeScript({
-                    function() {
-                        document.querySelector('body').style.marginRight = '411px'
-                        document.querySelector('body').style.transition = 'all 0.3s linear'
-                        const iframe = document.querySelector('.seo_wallet_extension_iframe')
-                        iframe.style.width = '411px'
-                    },
-                    target: { tabId: tabs[0].id }
-                })
-            })
-        }
-        else if (response.message === 'COLLAPSED_MENU_HIDE') {
-            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                chrome.scripting.executeScript({
-                    function() {
-                        document.querySelector('body').style.marginRight = '40px'
-                        document.querySelector('body').style.transition = 'all 0.3s linear'
-                        const iframe = document.querySelector('.seo_wallet_extension_iframe')
-                        iframe.style.width = '40px'
-                    },
-                    target: { tabId: tabs[0].id }
-                })
-            })
-        }
-        else if (response.message === 'COLLAPSED_MENU_SHOW') {
-            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                chrome.scripting.executeScript({
-                    function() {
-                        document.querySelector('body').style.marginRight = '88px'
-                        document.querySelector('body').style.transition = 'all 0.3s linear'
-                        const iframe = document.querySelector('.seo_wallet_extension_iframe')
-                        iframe.style.width = '88px'
-                    },
-                    target: { tabId: tabs[0].id }
-                })
+        if (response.message === 'searchIndex') {
+            chrome.scripting.executeScript({
+                target: { tabId: sender.tab.id },
+                function: searchIndex()
             })
         }
     })
+
     chrome.action.onClicked.addListener((tab) => {
-        if(tab.url.includes('chrome://')) return
         chrome.scripting.executeScript({
             target: { tabId: tab.id },
-            function: () => {
-                const iframe = document.createElement('iframe');
-                const body = document.querySelector('body')
-                console.log(document.querySelector('.seo_wallet_extension_iframe'))
-                if (document.querySelector('.seo_wallet_extension_iframe') != null) {
-                    const marginRight = document.querySelector('.seo_wallet_extension_iframe').style.width
-                    //If the width is 0, then the menu is closed, so we open it
-                    if (marginRight === '0px') {
-                        document.querySelector('body').style.marginRight = '411px'
-                        document.querySelector('body').style.transition = 'all 0.3s linear'
-                        const iframe = document.querySelector('.seo_wallet_extension_iframe')
-                        iframe.style.width = '411px'
-                        return 
-                    }
-                    return 
-                }
-                body.style.position = 'relative';
-                body.style.marginRight = '0';
-                body.style.width = 'auto'
-
-
-                //Make an iframe 
-                iframe.classList.add('seo_wallet_extension_iframe')
-
-                iframe.style.transform = 'translateX(411px)'
-
-                iframe.style.position = 'fixed';
-                iframe.style.top = '0';
-                iframe.style.right = '0';
-                iframe.style.width = '0';
-                iframe.style.zIndex = '9999999999999';
-                iframe.style.height = '100vh';
-                iframe.style.outline = 'none';
-                iframe.style.border = 'none';
-                iframe.style.boxShadow = '0 0 10px 0 rgba(0, 0, 0, 0.2)';
-                iframe.style.position = 'translateX(0)'
-                body.insertAdjacentElement("afterend", iframe)
-                body.style.marginRight = '411px';
-                body.style.transition = 'all 0.3s linear'
-                iframe.style.width = '411px';
-
-                iframe.src = chrome.runtime.getURL('index.html')
-                iframe.style.transform = 'translateX(0)'
-                iframe.style.transition = 'all 0.3s linear'
+            function: function () {
             }
         });
     });
 } catch (e) {
-    console.log(e)
+
 }
 

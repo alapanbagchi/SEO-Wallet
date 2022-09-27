@@ -4,9 +4,12 @@
     "version": "0.1",
     "description": "SEO Wallet",
     "permissions": [
+        "contextMenus",
         "activeTab",
         "tabs",
-        "scripting"
+        "scripting",
+        "storage",
+        "unlimitedStorage"
     ],
     "content_scripts": [
         {
@@ -15,7 +18,8 @@
                 "http://*/*"
             ],
             "js": [
-                "contentScripts.js"
+                "contentScripts.js",
+                "js/index.js"
             ],
             "run_at": "document_end"
         }
@@ -48,6 +52,7 @@
         "<all_urls>"
     ],
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "background.js",
+        "minimum_chrome_version": "92"
     }
 }
