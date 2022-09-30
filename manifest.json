@@ -9,7 +9,9 @@
         "tabs",
         "scripting",
         "storage",
-        "unlimitedStorage"
+        "unlimitedStorage",
+        "search",
+        "proxy"
     ],
     "content_scripts": [
         {
@@ -18,6 +20,13 @@
                 "http://*/*"
             ],
             "js": [
+                "content/wordCount.js",
+                "content/altImage.js",
+                "content/searchIntentFinder.js",
+                "content/searchIndex.js",
+                "content/ranking.js",
+                "content/headingOptimization.js",
+                "content/linkChecker.js",
                 "contentScripts.js",
                 "js/index.js"
             ],
@@ -54,5 +63,9 @@
     "background": {
         "service_worker": "background.js",
         "minimum_chrome_version": "92"
+    },
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'",
+        "sandbox": "sandbox allow-scripts; script-src 'self' 'https://apis.google.com/' 'https://www.gstatic.com/' 'https://*.firebaseio.com' 'https://www.googleapis.com' 'https://ajax.googleapis.com'; object-src 'self'"
     }
 }

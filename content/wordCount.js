@@ -1,5 +1,4 @@
-//Word Count logic
-const wordCount = (text) => {
+const wordCount = (request, sendResponse) => {
     document.addEventListener('selectionchange', () => {
         const words = document.getSelection().toString().split(' ').length;
         const characters = document.getSelection().toString().length;

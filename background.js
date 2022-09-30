@@ -1,27 +1,20 @@
 try {
-    try {
-        importScripts("utils/wordcounter.js", "utils/altImage.js", "utils/searchIntentFinder.js", "utils/searchIndex.js");
-    } catch (e) {
-        console.log(e);
-    }
+    importScripts('./content/linkChecker.js', './content/ranking.js');
     chrome.runtime.onMessage.addListener(async function (response, sender, sendResponse) {
         /**
          * WORD COUNT FUNCTIONALITY
          */
         //Executes the word count file when the message is received
         if (response.message === 'wordCount') {
-            chrome.scripting.executeScript({
-                target: { tabId: sender.tab.id },
-                function: wordCount
-            }
-            )
+            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                chrome.tabs.sendMessage(tabs[0].id, { message: 'wordCount', data: {} });
+            });
         }
         //Creates a context menu when the word count is done
         if (response.message === 'WordCountData') {
             chrome.contextMenus.remove('wordCount', () => {
                 chrome.runtime.lastError
             })
-
             chrome.contextMenus.create({
                 id: 'wordCount',
                 title: `Words: ${response.data[0]} |  Characters: ${response.data[1]}`,
@@ -40,10 +33,9 @@ try {
          * ALT IMAGE FUNCTIONALITY
         */
         if (response.message === 'altImage') {
-            chrome.scripting.executeScript({
-                target: { tabId: sender.tab.id },
-                function: altImage
-            })
+            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                chrome.tabs.sendMessage(tabs[0].id, { message: 'altImage', data: {} });
+            });
         }
         /**
          * END OF ALT IMAGE FUNCTIONALITY
@@ -78,26 +70,71 @@ try {
                 let link = response.data
                 const fetchedLink = await fetch(link)
                 const data = await fetchedLink.text()
-                chrome.tabs.sendMessage( 
+                chrome.tabs.sendMessage(
                     tabs[0].id,
                     {
-                        message: 'searchIntentDOMManipulation',
+                        message: 'searchDOMManipulation',
                         data: {
                             data, link
                         }
                     },
-                 )
+                )
             })
         }
-        if (response.message === 'searchDOMModify') {
-            console.log("HERE")
+        if (response.message === 'ranking') {
+            chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+                const data = await ranking_bg(response)
+                chrome.tabs.sendMessage(
+                    tabs[0].id,
+                    {
+                        message: 'ranking',
+                        data: {
+                            data
+                        }
+                    },
+                )
+            })
         }
         if (response.message === 'searchIndex') {
-            chrome.scripting.executeScript({
-                target: { tabId: sender.tab.id },
-                function: searchIndex()
+            chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+                const tabID = tabs[0].id
+                chrome.tabs.sendMessage(
+                    tabs[0].id,
+                    {
+                        message: 'searchIndex',
+                        data: {
+                            tabid: tabID
+                        }
+                    },
+                )
             })
         }
+        if (response.message === 'headingOptimization') {
+            chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+                chrome.tabs.sendMessage(
+                    tabs[0].id,
+                    {
+                        message: 'headingOptimization',
+                    },
+                )
+            })
+        }
+        if (response.message === 'linkChecker') {
+            chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+                chrome.tabs.sendMessage(
+                    tabs[0].id,
+                    {
+                        message: 'linkChecker',
+                    },
+                )
+            })
+        }
+        if (response.message === 'linkCheckerData') {
+            chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+                linkCheckerData_bg(response)
+            })
+        }
+
     })
 
     chrome.action.onClicked.addListener((tab) => {

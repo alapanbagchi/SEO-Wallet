@@ -1,3 +1,4 @@
+//Function for sending message to background.js
 const sendMessages = (msg) => {
     try {
         chrome.runtime.sendMessage(msg)
@@ -6,22 +7,39 @@ const sendMessages = (msg) => {
     }
 }
 
+//Function for receiving message from background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.message === 'searchIntentDOMManipulation') {
-        const { data, link } = request.data
-        console.log(link)
-        const parser = new DOMParser()
-        const doc = parser.parseFromString(data, 'text/html')
-        const title = doc.querySelector('title').innerText
-        const h1 = [...doc.querySelectorAll('h1')]
-        const h2 = [...doc.querySelectorAll('h2')]
-        const h3 = [...doc.querySelectorAll('h3')]
-        const h4 = [...doc.querySelectorAll('h4')]
-        const h5 = [...doc.querySelectorAll('h5')]
-        const h6 = [...doc.querySelectorAll('h6')]
-        console.log(title, h1, h2, h3, h4, h5, h6)
+    switch(request.message) {
+        case 'wordCount':
+            wordCount(request)
+            break
+        case 'altImage': 
+            altImage(request)
+            break
+        case 'searchDOMManipulation':
+            searchDOMManipulation(request)
+            break
+        case 'ranking':
+            ranking(request)
+            break
+        case 'searchIndex':
+            searchIndex(request)
+            break
+        case 'headingOptimization':
+            headingOptimization(request)
+            break
+        case 'linkChecker':
+            linkChecker(request)
+            break
+        case 'linkCheckerData':
+            console.log("HERE")
+            linkCheckerData(request)
+        default:
+            break
     }
 })
+
+
 
 const wordCountListener = () => {
     document.addEventListener('selectionchange', () => {
